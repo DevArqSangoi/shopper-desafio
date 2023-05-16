@@ -9,7 +9,7 @@ Desafio técnico para vaga de dev fullstack jr
 6) Abrir dois terminais.
 7) Em um terminal navegar para a pasta client.
 8) No outro terminal navegar para a pasta server.
-9) Executar npm start em ambos os terminais
-10) O front-end vai estar sendo executado em http://localhost:3000 ou http://127.0.0.1:3000
-11) O back-end vai estar sendo executado em http://localhost:5000 ou http://127.0.0.1:5000
-12) Se não desejarem definir uma senha para acesso ao banco de dados, remover a senha no arquivo server\src\utils\sequelize.ts
+9) Executar npm start em ambos os terminais.
+10) O front-end vai estar sendo executado em http://localhost:3000 ou http://127.0.0.1:3000.
+11) O back-end vai estar sendo executado em http://localhost:5000 ou http://127.0.0.1:5000.
+12) Se não desejarem definir uma senha para acesso ao banco de dados, remover a senha no arquivo server\src\utils\sequelize.ts.
