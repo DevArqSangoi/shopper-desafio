@@ -3,7 +3,7 @@ Desafio técnico para vaga de dev fullstack jr
 
 1) Clonar este repositório.
 2) Instalar o Xampp.
-3) Substituir o MariaDB pelo Mysql 8, seguindo as instruções desta postagem: https://stackoverflow.com/a/58973750
+3) Substituir o MariaDB pelo Mysql 8 seguindo as instruções desta postagem: https://stackoverflow.com/a/58973750
 4) Converter para UTF-8 o arquivo database.sql fornecido junto do desafio, sugiro usar o Notepad++.
 5) Importar o database.sql no banco de dados.
 6) Abrir dois terminais.
