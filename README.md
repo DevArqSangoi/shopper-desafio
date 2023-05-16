@@ -14,4 +14,4 @@ Desafio técnico para vaga de dev fullstack jr
 11) O back-end vai estar sendo executado em http://localhost:5000 ou http://127.0.0.1:5000.
 12) Se não desejarem definir uma senha para acesso ao banco de dados, remover a senha no arquivo server\src\utils\sequelize.ts.
 
-Obs.: Também é possível usar npm start na raiz do projeto, a minha preferência de dois prompt de comando é para visualizar eventuais erros separadamente.
+Obs.: Também é possível usar npm start na raiz do projeto, a minha preferência de dois prompts de comando é para visualizar eventuais erros separadamente.
