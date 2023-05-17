@@ -2,9 +2,8 @@
 import express from 'express';
 import multer from 'multer';
 import cors from 'cors';
-import Product from './src/models/Product';
-import { loadDataAndValidate } from './src/utils/validator';
-import { updatePrices } from './src/utils/updatePrices';
+import { Product } from './src/models/initModels';
+import { loadDataAndValidate, updatePrices } from './src/utils/validator';
 
 const app = express();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -22,11 +21,11 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     }
 
     const validationResponse = await loadDataAndValidate(req.file.buffer);
-
     if (validationResponse.errors.length > 0) {
       const errorResponse = {
         errors: validationResponse.errors,
         invalidData: validationResponse.invalidData,
+        validatedData: validationResponse.validatedData,
       };
       return res.json(errorResponse);
     }
@@ -40,13 +39,14 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 });
 
 app.post('/update', upload.single('file'), async (req, res) => {
+  console.log('Recebeu solicitação de /update');
   try {
     if (!req.file || !req.file.buffer) {
       return res.json({ error: 'Nenhum arquivo enviado.' });
     }
 
     const validationResponse = await loadDataAndValidate(req.file.buffer);
-    
+
     if (validationResponse.errors.length > 0) {
       const errorResponse = {
         errors: validationResponse.errors,
@@ -55,15 +55,18 @@ app.post('/update', upload.single('file'), async (req, res) => {
       return res.json(errorResponse);
     }
 
-    await updatePrices(validationResponse.validatedData);
+    const updateResult = await updatePrices(validationResponse.validatedData);
 
     console.log('Preços atualizados com sucesso.');
-    res.json(validationResponse.validatedData);
+    console.log('Produtos atualizados:', updateResult.success.length);
+    console.log('Produtos falhados:', updateResult.failed.length);
+    res.json({ updatedData: updateResult.success, failedData: updateResult.failed });
   } catch (error) {
     console.error('Erro ao atualizar os preços:', error);
     res.json({ error: 'Erro ao atualizar os preços.' });
   }
 });
+
 
 app.get('/produtos', async (req, res) => {
   try {

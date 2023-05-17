@@ -11,11 +11,18 @@ class Pack extends Model {
 
     public readonly product?: Product;
 
-    static associate(models: any) {
-        this.belongsTo(models.Product, {
-            foreignKey: 'product_id',
-            as: 'product',
-        });
+    public static async updatePriceBasedOnProducts(pack_id: number) {
+        const packProducts = await Pack.findAll({ where: { pack_id }, include: [Product] });
+        let newPackCostPrice = 0;
+        let newPackSalesPrice = 0;
+        for (const packProduct of packProducts) {
+            if (packProduct.product) {
+                newPackCostPrice += packProduct.qty * packProduct.product.cost_price;
+                newPackSalesPrice += packProduct.qty * packProduct.product.sales_price;
+            }
+        }
+        await Product.update({ cost_price: newPackCostPrice, sales_price: newPackSalesPrice },
+            { where: { code: pack_id } });
     }
 }
 

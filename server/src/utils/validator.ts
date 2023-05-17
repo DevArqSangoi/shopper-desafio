@@ -1,5 +1,5 @@
 // server/src/utils/validator.ts - Back-end
-import Product from '../models/Product';
+import { Product } from '../models/initModels';
 import { parse } from 'csv-parse';
 
 interface CsvData {
@@ -37,8 +37,26 @@ export const validateCsvData = async (csvData: CsvData[]) => {
 
     const newSalesPrice = parseFloat(row.new_price);
 
-    if (newSalesPrice < product.cost_price || newSalesPrice > product.sales_price * 1.1 || newSalesPrice < product.sales_price * 0.9) {
-      errors.push(`Reajuste do produto com código ${row.product_code} é maior ou menor do que 10% do preço atual.`);
+    if (newSalesPrice < product.cost_price) {
+      errors.push(`O preço de venda do produto com código ${row.product_code} está abaixo do preço de custo.`);
+      invalidData.push({
+        product_code: row.product_code,
+        name: product.name,
+        cost_price: product.cost_price,
+        sales_price: product.sales_price,
+        new_price: row.new_price
+      });
+    } else if (newSalesPrice > product.sales_price * 1.1) {
+      errors.push(`O preço de venda do produto com código ${row.product_code} é maior do que 10% do preço atual.`);
+      invalidData.push({
+        product_code: row.product_code,
+        name: product.name,
+        cost_price: product.cost_price,
+        sales_price: product.sales_price,
+        new_price: row.new_price
+      });
+    } else if (newSalesPrice < product.sales_price * 0.9) {
+      errors.push(`O preço de venda do produto com código ${row.product_code} é menor do que 10% do preço atual.`);
       invalidData.push({
         product_code: row.product_code,
         name: product.name,
@@ -55,6 +73,7 @@ export const validateCsvData = async (csvData: CsvData[]) => {
         new_price: row.new_price
       });
     }
+
   }
 
   return { errors, validatedData, invalidData };
@@ -78,7 +97,7 @@ export const loadDataAndValidate = async (fileBuffer: Buffer): Promise<Validatio
       console.log(errors);
       return {
         errors: errors,
-        validatedData: [],
+        validatedData: validatedData,
         invalidData: invalidData,
       };
     } else {
@@ -96,13 +115,23 @@ export const loadDataAndValidate = async (fileBuffer: Buffer): Promise<Validatio
   }
 };
 
-export const updatePrices = async (validatedData: ValidatedProduct[]) => {
+export const updatePrices = async (validatedData: ValidatedProduct[]): Promise<{ success: ValidatedProduct[], failed: ValidatedProduct[] }> => {
+  const success: ValidatedProduct[] = [];
+  const failed: ValidatedProduct[] = [];
   for (const row of validatedData) {
-    const product = await Product.findOne({ where: { code: row.product_code } });
+    const product = await Product.findOne({ where: { code: parseInt(row.product_code) } });
 
     if (product) {
-      product.sales_price = parseFloat(row.new_price);
-      await product.save();
+      try {
+        const newSalesPrice = parseFloat(row.new_price);
+        await Product.updateAndAdjustPackPrices(product.code, product.cost_price, newSalesPrice);
+        success.push(row);
+      } catch (error) {
+        console.error(`Erro ao atualizar o preço do produto ${row.product_code}:`, error);
+        failed.push(row);
+      }
     }
   }
+
+  return { success, failed };
 };
