@@ -26,3 +26,14 @@ Este repositório contém o desafio técnico, concluído após o prazo estabelec
 - Utilize o campo de filtro para pesquisar produtos pelo nome.
 - Ao selecionar um arquivo e clicar em "Validar", a tabela de produtos validados é populada com os produtos, seus dados e destaque visual para produtos válidos e inválidos. Os produtos inválidos são acompanhados de sua respectiva mensagem de erro.
 - Selecione um arquivo e clique em "Atualizar Preços" para realizar a validação. Se todos os produtos estiverem dentro das especificações, os dados são inseridos no banco de dados e atualizados na lista de produtos à direita. Os produtos atualizados também são exibidos em uma tabela específica de produtos que foram reajustados.
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
+
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
+
+[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
